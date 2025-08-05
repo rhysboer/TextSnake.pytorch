@@ -64,7 +64,15 @@ class TextNet(nn.Module):
 
     def load_model(self, model_path):
         print('Loading from {}'.format(model_path))
-        state_dict = torch.load(model_path)
+        isGPUavailable = torch.cuda.is_available()
+
+        state_dict = None
+        if(isGPUavailable):
+            state_dict = torch.load(model_path)
+        else:
+            state_dict = torch.load(model_path, map_location=torch.device('cpu'))
+            
+
         self.load_state_dict(state_dict['model'])
 
 if __name__ == '__main__':

@@ -32,12 +32,15 @@ def write_to_file(contours, file_path):
 def inference(detector, test_loader, output_dir):
 
     total_time = 0.
+    usingGPU = cfg.cuda
 
     for i, (image, meta) in enumerate(test_loader):
 
         image = to_device(image)
 
-        torch.cuda.synchronize()
+        if(usingGPU):
+            torch.cuda.synchronize()
+        
         start = time.time()
 
         idx = 0 # test mode can only run with batch_size == 1
@@ -45,7 +48,9 @@ def inference(detector, test_loader, output_dir):
         # get detection result
         contours, output = detector.detect(image)
 
-        torch.cuda.synchronize()
+        if(usingGPU):
+            torch.cuda.synchronize()
+            
         end = time.time()
         total_time += end - start
         fps = (i + 1) / total_time
@@ -82,6 +87,7 @@ def main():
     model.load_model(model_path)
 
     # copy to cuda
+    print(cfg.device)
     model = model.to(cfg.device)
     if cfg.cuda:
         cudnn.benchmark = True

@@ -52,7 +52,7 @@ class TextDetector(object):
                 point = cont[p, 0]
                 for i in range(-1, 2, 1):
                     for j in range(-1, 2, 1):
-                        test_pt = point + [i, j]
+                        test_pt = np.float32(point + [i, j])
                         if cv2.pointPolygonTest(cont, (test_pt[0], test_pt[1]), False) > 0:
                             return test_pt
 

@@ -4,3 +4,4 @@ __pycache__/
 output/
 save/
 vis/
+.DS_Store
